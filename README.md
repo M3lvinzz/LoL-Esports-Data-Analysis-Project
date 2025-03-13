@@ -2,7 +2,10 @@
 table {
     display: block;
     overflow-x: auto;
+    margin: auto;
     max-width: 105%;
+    border: 2px solid #000;
+    border-collapse: collapse;
 }
 td, th {
     white-space: nowrap;
@@ -79,8 +82,8 @@ To fully understand the dataset, we must look at the distributions of metrics in
 
 <iframe
 src= 'assets/univariate1.html'
-width = 600
-height = 400
+width = 700
+height = 500
 frameborder = 0
 ></iframe>
 
@@ -90,8 +93,8 @@ Additionally, gauging how the distribution looks for `totalcs` since it is an in
 
 <iframe
 src= 'assets/univariate2.html'
-width = 600
-height = '400'
+width = 700
+height = '500'
 frameborder = '0'
 ></iframe>
 
@@ -102,8 +105,8 @@ Since match wins are an important metric when preforming analysis on League of L
 
 <iframe
 src= 'assets/bivariate.html'
-width = 600
-height = '400'
+width = 700
+height = '500'
 frameborder = '0'
 ></iframe>
 
