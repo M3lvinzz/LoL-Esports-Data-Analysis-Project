@@ -1,20 +1,26 @@
 <style>
+/* Center the table */
 table {
     display: block;
-    overflow-x: auto;
-    margin: auto;
-    max-width: 105%;
-    border: 2px solid #000;
-    border-collapse: collapse;
+    margin: auto; /* Centers the table */
+    overflow-x: auto; /* Enables horizontal scrolling */
+    max-width: 100%;
+    border: 2px solid #555; /* Dark gray border for the entire table */
+    border-collapse: collapse; /* Merges borders into a clean look */
+    background-color: #f8f9fa; /* Light background to match the theme */
 }
-td, th {
-    white-space: nowrap;
+
+/* Style table headers and cells */
+th, td {
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 2px solid #555; /* Dark gray border for consistency */
+    white-space: nowrap; /* Prevents text from wrapping */
 }
+
+/* Style table headers */
 th {
-    border: 2px solid #333;
-    background-color: #f4f4f4;
+    background-color: #2d2d2d; /* Dark grayish-black header background */
+    color: #f8f9fa; /* Light text for readability */
 }
 </style>
 
@@ -59,23 +65,23 @@ One important row that contained a few missing values was the `voidgrubs` column
 
 This is the head to the cleaned, imputed team rows dataset (internally called cleaned_team_filled) that is used for hypothesis testing:
 
-|    | gameid             | side   | league   |   participantid |   voidgrubs |   kills |   totalcs | result   |
-|---:|:-------------------|:-------|:---------|----------------:|------------:|--------:|----------:|:---------|
-|  0 | 10660-10660_game_1 | Blue   | DCup     |             100 |           2 |       3 |      1043 | False    |
-|  1 | 10660-10660_game_1 | Red    | DCup     |             200 |           2 |      16 |      1100 | True     |
-|  2 | 10660-10660_game_2 | Blue   | DCup     |             100 |           0 |       3 |       956 | False    |
-|  3 | 10660-10660_game_2 | Red    | DCup     |             200 |           5 |      17 |      1114 | True     |
-|  4 | 10660-10660_game_3 | Blue   | DCup     |             100 |           0 |      21 |       786 | True     |
+| gameid             | side   | league   |   participantid |   voidgrubs |   kills |   totalcs | result   |
+|:-------------------|:-------|:---------|----------------:|------------:|--------:|----------:|:---------|
+| 10660-10660_game_1 | Blue   | DCup     |             100 |           1 |       3 |      1043 | False    |
+| 10660-10660_game_1 | Red    | DCup     |             200 |           3 |      16 |      1100 | True     |
+| 10660-10660_game_2 | Blue   | DCup     |             100 |           0 |       3 |       956 | False    |
+| 10660-10660_game_2 | Red    | DCup     |             200 |           2 |      17 |      1114 | True     |
+| 10660-10660_game_3 | Blue   | DCup     |             100 |           0 |      21 |       786 | True     |
 
 This is the head to the cleaned player rows dataset (internally called cleaned_player) that will be used for the predictive model:
 
-|    | gameid             |   participantid | position   |   kills |   deaths |   assists |   totaldamage |   totalcs |   totalgold |
-|---:|:-------------------|----------------:|:-----------|--------:|---------:|----------:|--------------:|----------:|------------:|
-|  0 | 10660-10660_game_1 |               1 | top        |       1 |        3 |         1 |          7092 |       279 |       11083 |
-|  1 | 10660-10660_game_1 |               2 | jng        |       0 |        4 |         3 |          7361 |       153 |        8636 |
-|  2 | 10660-10660_game_1 |               3 | mid        |       0 |        2 |         0 |         10005 |       270 |       10743 |
-|  3 | 10660-10660_game_1 |               4 | bot        |       2 |        4 |         0 |         10892 |       311 |       12224 |
-|  4 | 10660-10660_game_1 |               5 | sup        |       0 |        3 |         3 |          6451 |        30 |        7221 |
+| gameid             |   participantid | position   |   kills |   deaths |   assists |   totaldamage |   totalcs |   totalgold |
+|:-------------------|----------------:|:-----------|--------:|---------:|----------:|--------------:|----------:|------------:|
+| 10660-10660_game_1 |               1 | top        |       1 |        3 |         1 |          7092 |       279 |       11083 |
+| 10660-10660_game_1 |               2 | jng        |       0 |        4 |         3 |          7361 |       153 |        8636 |
+| 10660-10660_game_1 |               3 | mid        |       0 |        2 |         0 |         10005 |       270 |       10743 |
+| 10660-10660_game_1 |               4 | bot        |       2 |        4 |         0 |         10892 |       311 |       12224 |
+| 10660-10660_game_1 |               5 | sup        |       0 |        3 |         3 |          6451 |        30 |        7221 |
 
 ### Univariate Analysis
 To fully understand the dataset, we must look at the distributions of metrics in our dataset. Since `voidgrubs` is imperative in our analysis, looking at the distribution of `voidgrubs` is imperative.
