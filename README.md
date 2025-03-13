@@ -1,26 +1,20 @@
 <style>
-/* Center the table */
-.table-container {
-    display: flex;
-    justify-content: center; /* Centers the table */
-    overflow-x: auto; /* Enables horizontal scrolling if needed */
-    padding: 10px;
-}
-
-/* Style the table */
+/* Style the table directly */
 table {
     width: 100%;
     max-width: 800px; /* Limits the max width */
     border: 2px solid #555; /* Dark gray border for the entire table */
     border-collapse: collapse; /* Merges borders into a clean look */
     background-color: #f8f9fa; /* Light background to match the theme */
+    margin: 0 auto; /* Centers the table */
+    overflow-x: auto; /* Enables horizontal scrolling if needed */
 }
 
 /* Style table headers and cells */
 th, td {
     padding: 8px;
     border: 2px solid #555; /* Dark gray border for consistency */
-    word-wrap: break-word; /* Allows words to break and wrap to the next line */
+    word-wrap: break-word; /* Allows text to wrap */
     white-space: normal; /* Enables multi-line text wrapping */
     max-width: 200px; /* Optional: Limits the width of each cell */
 }
