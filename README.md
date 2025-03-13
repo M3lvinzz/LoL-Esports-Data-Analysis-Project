@@ -1,29 +1,12 @@
 <style>
-/* Style the table directly */
 table {
-    width: 100%;
-    max-width: 800px; /* Limits the max width */
-    border: 2px solid #555; /* Dark gray border for the entire table */
-    border-collapse: collapse; /* Merges borders into a clean look */
-    background-color: #f8f9fa; /* Light background to match the theme */
-    margin: 0 auto; /* Centers the table */
-    overflow-x: auto; /* Enables horizontal scrolling if needed */
-}
-
-/* Style table headers and cells */
-th, td {
-    padding: 8px;
-    border: 2px solid #555; /* Dark gray border for consistency */
-    word-wrap: break-word; /* Allows text to wrap */
-    white-space: normal; /* Enables multi-line text wrapping */
-    max-width: 200px; /* Optional: Limits the width of each cell */
-}
-
-/* Style table headers */
-th {
-    background-color: #2d2d2d; /* Dark grayish-black header background */
-    color: #f8f9fa; /* Light text for readability */
-}
+    width: 106%;
+    border-collapse: collapse;
+    text-align: center;
+    margin: auto;
+    overflow-x: auto;
+    display: block;
+  }
 </style>
 
 # League of Legends: Analyzing Void Grubs
