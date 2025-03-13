@@ -1,10 +1,16 @@
 <style>
 /* Center the table */
+.table-container {
+    display: flex;
+    justify-content: center; /* Centers the table */
+    overflow-x: auto; /* Enables horizontal scrolling if needed */
+    padding: 10px;
+}
+
+/* Style the table */
 table {
-    display: block;
-    margin: auto; /* Centers the table */
-    overflow-x: auto; /* Enables horizontal scrolling */
-    max-width: 106%;
+    width: 100%;
+    max-width: 800px; /* Limits the max width */
     border: 2px solid #555; /* Dark gray border for the entire table */
     border-collapse: collapse; /* Merges borders into a clean look */
     background-color: #f8f9fa; /* Light background to match the theme */
@@ -14,7 +20,9 @@ table {
 th, td {
     padding: 8px;
     border: 2px solid #555; /* Dark gray border for consistency */
-    white-space: nowrap; /* Prevents text from wrapping */
+    word-wrap: break-word; /* Allows words to break and wrap to the next line */
+    white-space: normal; /* Enables multi-line text wrapping */
+    max-width: 200px; /* Optional: Limits the width of each cell */
 }
 
 /* Style table headers */
@@ -121,6 +129,8 @@ According to the plots, it is shown that 'games_won' overtake the 'games_lost' w
 ### Interesting Aggregate
 Aggregating the cleaned_team_filled, and interesting pattern appears:
 
+<div class = 'table-container'>
+
 |   voidgrubs |   kills |   totalcs |   result |
 |------------:|--------:|----------:|---------:|
 |           0 | 14.0272 |   1012.7  | 0.407293 |
@@ -131,6 +141,7 @@ Aggregating the cleaned_team_filled, and interesting pattern appears:
 |           5 | 16.2454 |   1037.41 | 0.58623  |
 |           6 | 16.2573 |   1029.11 | 0.617502 |
 
+</div>
 To achieve this aggregate dataframe, the cleaned_team_filled dataset was slimmed down to only include: `voidgrubs`, `kills`, `totalcs`, `result`. This slimmed down dataframe was then condensed using groupby on `voidgrubs` with mean as it's aggregate function. Looking at kills, the average number of kills goes up slightly as more `voidgrubs` are taken. `totalcs`, however, is shown to be relatively the same, since there number go up and down as `voidgrubs` goes up. `result`, however, goes up as `voidgrubs` goes up, implying there is a relationship between winning and winning games.
 
 ## Assessment of Missingness
