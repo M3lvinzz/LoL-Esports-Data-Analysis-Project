@@ -65,7 +65,7 @@ This is the head to the cleaned player rows dataset (internally called cleaned_p
 </div>
 
 ### Univariate Analysis
-Looking at the 
+To fully understand the dataset, we must look at the distributions of metrics in our dataset. Since `voidgrubs` is imperative in our analysis, looking at the distribution of `voidgrubs` is imperative.
 ## Assessment of Missingness
 ## Hypothesis Testing
 ## Framing a Prediction Problem
