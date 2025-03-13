@@ -106,8 +106,6 @@ According to the plots, it is shown that 'games_won' overtake the 'games_lost' w
 ### Interesting Aggregate
 Aggregating the cleaned_team_filled, and interesting pattern appears:
 
-<div class = 'table-container'>
-
 |   voidgrubs |   kills |   totalcs |   result |
 |------------:|--------:|----------:|---------:|
 |           0 | 14.0272 |   1012.7  | 0.407293 |
@@ -118,7 +116,6 @@ Aggregating the cleaned_team_filled, and interesting pattern appears:
 |           5 | 16.2454 |   1037.41 | 0.58623  |
 |           6 | 16.2573 |   1029.11 | 0.617502 |
 
-</div>
 To achieve this aggregate dataframe, the cleaned_team_filled dataset was slimmed down to only include: `voidgrubs`, `kills`, `totalcs`, `result`. This slimmed down dataframe was then condensed using groupby on `voidgrubs` with mean as it's aggregate function. Looking at kills, the average number of kills goes up slightly as more `voidgrubs` are taken. `totalcs`, however, is shown to be relatively the same, since there number go up and down as `voidgrubs` goes up. `result`, however, goes up as `voidgrubs` goes up, implying there is a relationship between winning and winning games.
 
 ## Assessment of Missingness
