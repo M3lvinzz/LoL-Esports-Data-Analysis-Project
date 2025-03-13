@@ -39,7 +39,7 @@ One important row that contained a few missing values was the `voidgrubs` column
 
 This is the head to the cleaned, imputed team rows dataset (internally called cleaned_team_filled) that is used for hypothesis testing:
 
-
+<div class= 'table-wrapper' markdown = 'block'>
 |    | gameid             | side   | league   |   participantid |   voidgrubs |   kills |   totalcs | result   |
 |---:|:-------------------|:-------|:---------|----------------:|------------:|--------:|----------:|:---------|
 |  0 | 10660-10660_game_1 | Blue   | DCup     |             100 |           2 |       3 |      1043 | False    |
@@ -47,9 +47,10 @@ This is the head to the cleaned, imputed team rows dataset (internally called cl
 |  2 | 10660-10660_game_2 | Blue   | DCup     |             100 |           0 |       3 |       956 | False    |
 |  3 | 10660-10660_game_2 | Red    | DCup     |             200 |           5 |      17 |      1114 | True     |
 |  4 | 10660-10660_game_3 | Blue   | DCup     |             100 |           0 |      21 |       786 | True     |
-
+</div>
 This is the head to the cleaned player rows dataset (internally called cleaned_player) that will be used for the predictive model:
 
+<div class= 'table-wrapper' markdown = 'block'>
 
 |    | gameid             |   participantid | position   |   kills |   deaths |   assists |   totaldamage |   totalcs |   totalgold |
 |---:|:-------------------|----------------:|:-----------|--------:|---------:|----------:|--------------:|----------:|------------:|
@@ -58,6 +59,7 @@ This is the head to the cleaned player rows dataset (internally called cleaned_p
 |  2 | 10660-10660_game_1 |               3 | mid        |       0 |        2 |         0 |         10005 |       270 |       10743 |
 |  3 | 10660-10660_game_1 |               4 | bot        |       2 |        4 |         0 |         10892 |       311 |       12224 |
 |  4 | 10660-10660_game_1 |               5 | sup        |       0 |        3 |         3 |          6451 |        30 |        7221 |
+</div>
 
 ### Univariate Analysis
 Looking at the 
