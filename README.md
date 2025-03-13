@@ -1,3 +1,12 @@
+<style>
+table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    max-width: 100%;
+}
+</style>
+
 # League of Legends: Analyzing Void Grubs
 Authors: Elvin Chen
 
