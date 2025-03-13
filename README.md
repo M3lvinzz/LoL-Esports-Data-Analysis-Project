@@ -28,13 +28,25 @@ While creating 2 datasets, the columns used are described here:
 - `totaldamage` - The 'damage' done in this column is only towards enemy champions. This represents the numerical damage a player did towards the opposing players
 - `totalgold` - 'gold' is a currency in the game given when eliminating champions, turrets, minions/monsters and neutral objectives. This represents the total gold gained by a player
 - `result` - This column contains a binary True of False, which represents if a team won a game or not.
+
 ## Data Cleaning and Exploratory Data Analysis
 One of the quirks in the Oracle's Elixir dataset is how the rows are set up between teams and individual players. Each game has twelve rows, ten rows being for the players, and two being for each team summarizing their overall team metrics. For this project, we need both the player rows and the team rows, but to keep the dataset clean the dataset was split between the player rows and the team rows. 
 
 ### Missing values
 In both datasets, there were a few rows that contained missing values. The player rows contained no missing values for the relevant columns, however, the team rows contained a few missing values. Looking through the team rows, metrics such as `totalcs` were only present in the player rows. To solve this, the total damage was extracted from each player on every team by utilizing groupby on columns `gameid` and `side`. 
 
-One important row that contained a few missing values was the `voidgrubs` column. Since this column is integral to the overall statistical analysis, conditional probabilistic imputation was used to impute the missing `voidgrubs`. 
+One important row that contained a few missing values was the `voidgrubs` column. Since this column is integral to the overall statistical analysis, conditional probabilistic imputation was used to impute the missing `voidgrubs`. By running a permutation test on missingness, it was shown that the missingness of `voidgrubs` is dependent on the kills column. While the essence of the permutation is crucial to understanding, the intricices of the hypothesis test is expanded on in [Assessment of Missingness](#assessment-of-missingness)
+
+This is the head to the cleaned, imputed team rows dataset (internally called cleaned_team_filled) that is used for hypothesis testing:
+|    | gameid             | side   | league   |   participantid |   voidgrubs |   kills |   totalcs | result   |
+|---:|:-------------------|:-------|:---------|----------------:|------------:|--------:|----------:|:---------|
+|  0 | 10660-10660_game_1 | Blue   | DCup     |             100 |           2 |       3 |      1043 | False    |
+|  1 | 10660-10660_game_1 | Red    | DCup     |             200 |           2 |      16 |      1100 | True     |
+|  2 | 10660-10660_game_2 | Blue   | DCup     |             100 |           0 |       3 |       956 | False    |
+|  3 | 10660-10660_game_2 | Red    | DCup     |             200 |           5 |      17 |      1114 | True     |
+|  4 | 10660-10660_game_3 | Blue   | DCup     |             100 |           0 |      21 |       786 | True     |
+
+This is the head to the cleaned player rows dataset (internally called cleaned_player) that will be used for the predictive model:
 ## Assessment of Missingness
 ## Hypothesis Testing
 ## Framing a Prediction Problem
