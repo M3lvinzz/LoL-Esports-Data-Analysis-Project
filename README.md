@@ -38,6 +38,8 @@ In both datasets, there were a few rows that contained missing values. The playe
 One important row that contained a few missing values was the `voidgrubs` column. Since this column is integral to the overall statistical analysis, conditional probabilistic imputation was used to impute the missing `voidgrubs`. By running a permutation test on missingness, it was shown that the missingness of `voidgrubs` is dependent on the kills column. While the essence of the permutation is crucial to understanding, the intricices of the hypothesis test is expanded on in [Assessment of Missingness](#assessment-of-missingness)
 
 This is the head to the cleaned, imputed team rows dataset (internally called cleaned_team_filled) that is used for hypothesis testing:
+
+
 |    | gameid             | side   | league   |   participantid |   voidgrubs |   kills |   totalcs | result   |
 |---:|:-------------------|:-------|:---------|----------------:|------------:|--------:|----------:|:---------|
 |  0 | 10660-10660_game_1 | Blue   | DCup     |             100 |           2 |       3 |      1043 | False    |
@@ -47,6 +49,8 @@ This is the head to the cleaned, imputed team rows dataset (internally called cl
 |  4 | 10660-10660_game_3 | Blue   | DCup     |             100 |           0 |      21 |       786 | True     |
 
 This is the head to the cleaned player rows dataset (internally called cleaned_player) that will be used for the predictive model:
+
+
 |    | gameid             |   participantid | position   |   kills |   deaths |   assists |   totaldamage |   totalcs |   totalgold |
 |---:|:-------------------|----------------:|:-----------|--------:|---------:|----------:|--------------:|----------:|------------:|
 |  0 | 10660-10660_game_1 |               1 | top        |       1 |        3 |         1 |          7092 |       279 |       11083 |
@@ -56,7 +60,7 @@ This is the head to the cleaned player rows dataset (internally called cleaned_p
 |  4 | 10660-10660_game_1 |               5 | sup        |       0 |        3 |         3 |          6451 |        30 |        7221 |
 
 ### Univariate Analysis
-
+Looking at the 
 ## Assessment of Missingness
 ## Hypothesis Testing
 ## Framing a Prediction Problem
