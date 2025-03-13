@@ -39,8 +39,6 @@ One important row that contained a few missing values was the `voidgrubs` column
 
 This is the head to the cleaned, imputed team rows dataset (internally called cleaned_team_filled) that is used for hypothesis testing:
 
-<div class= 'table-wrapper' markdown = 'block'>
-
 |    | gameid             | side   | league   |   participantid |   voidgrubs |   kills |   totalcs | result   |
 |---:|:-------------------|:-------|:---------|----------------:|------------:|--------:|----------:|:---------|
 |  0 | 10660-10660_game_1 | Blue   | DCup     |             100 |           2 |       3 |      1043 | False    |
@@ -49,10 +47,7 @@ This is the head to the cleaned, imputed team rows dataset (internally called cl
 |  3 | 10660-10660_game_2 | Red    | DCup     |             200 |           5 |      17 |      1114 | True     |
 |  4 | 10660-10660_game_3 | Blue   | DCup     |             100 |           0 |      21 |       786 | True     |
 
-</div>
 This is the head to the cleaned player rows dataset (internally called cleaned_player) that will be used for the predictive model:
-
-<div class= 'table-wrapper' markdown = 'block'>
 
 |    | gameid             |   participantid | position   |   kills |   deaths |   assists |   totaldamage |   totalcs |   totalgold |
 |---:|:-------------------|----------------:|:-----------|--------:|---------:|----------:|--------------:|----------:|------------:|
@@ -61,8 +56,6 @@ This is the head to the cleaned player rows dataset (internally called cleaned_p
 |  2 | 10660-10660_game_1 |               3 | mid        |       0 |        2 |         0 |         10005 |       270 |       10743 |
 |  3 | 10660-10660_game_1 |               4 | bot        |       2 |        4 |         0 |         10892 |       311 |       12224 |
 |  4 | 10660-10660_game_1 |               5 | sup        |       0 |        3 |         3 |          6451 |        30 |        7221 |
-
-</div>
 
 ### Univariate Analysis
 To fully understand the dataset, we must look at the distributions of metrics in our dataset. Since `voidgrubs` is imperative in our analysis, looking at the distribution of `voidgrubs` is imperative.
@@ -73,7 +66,50 @@ width = 800
 height = '600'
 frameborder = '0'
 ></iframe>
+
+Looking at the graph, it shows that most games have teams take either 0, 3, or 6 grubs respectively.
+
+Additionally, gauging how the distribution looks for `totalcs` since it is an integral part of our hypothesis testing later on
+
+<iframe
+src= 'assets/univariate2.html'
+width = 800
+height = '600'
+frameborder = '0'
+></iframe>
+
+Looking at the distribution of total cs, we see that it is relatively normally distributed, and shows that it is a good statistic for analyzing the impact of `voidgrubs`
+
+### Bivariate Analysis
+Since match wins are an important metric when preforming analysis on League of Legends data, looking at the relationship between number of `voidgrubs` and `result` become important in understanding the importance of `voidgrubs`
+
+<iframe
+src= 'assets/bivariate.html'
+width = 800
+height = '600'
+frameborder = '0'
+></iframe>
+
+According to the plots, it is shown that 'games_won' overtake the 'games_lost' when having 3+ grubs. This shows that there might be a correlation between winning games and having more void grubs, especially having 6 grubs, which have a much higher ratio of 'games_won' compared to 'games_lost'
+
+### Interesting Aggregate
+Aggregating the cleaned_team_filled, and interesting pattern appears:
+
+|   voidgrubs |   kills |   totalcs |   result |
+|------------:|--------:|----------:|---------:|
+|           0 | 14.0272 |   1012.7  | 0.407293 |
+|           1 | 14.3886 |   1026.74 | 0.443273 |
+|           2 | 14.7525 |   1042.56 | 0.467936 |
+|           3 | 15.398  |   1048.3  | 0.504607 |
+|           4 | 15.3335 |   1045.04 | 0.527848 |
+|           5 | 16.2454 |   1037.41 | 0.58623  |
+|           6 | 16.2573 |   1029.11 | 0.617502 |
+
+To achieve this aggregate dataframe, the cleaned_team_filled dataset was slimmed down to only include: `voidgrubs`, `kills`, `totalcs`, `result`. This slimmed down dataframe was then condensed using groupby on `voidgrubs` with mean as it's aggregate function. Looking at kills, the average number of kills goes up slightly as more `voidgrubs` are taken. `totalcs`, however, is shown to be relatively the same, since there number go up and down as `voidgrubs` goes up. `result`, however, goes up as `voidgrubs` goes up, implying there is a relationship between winning and winning games.
+
 ## Assessment of Missingness
+### NMAR Analysis 
+
 ## Hypothesis Testing
 ## Framing a Prediction Problem
 ## Baseline Model

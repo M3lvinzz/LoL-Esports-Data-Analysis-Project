@@ -1,0 +1,11 @@
+.table-container {
+    overflow-x: auto;
+    max-width: 100%;
+    display: block;
+    white-space: nowrap;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
