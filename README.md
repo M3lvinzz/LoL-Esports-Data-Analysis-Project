@@ -3,7 +3,7 @@ table {
     display: block;
     overflow-x: auto;
     white-space: nowrap;
-    max-width: 100%;
+    max-width: 110%;
 }
 table th, table td {
     padding: 8px;
