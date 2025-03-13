@@ -47,6 +47,16 @@ This is the head to the cleaned, imputed team rows dataset (internally called cl
 |  4 | 10660-10660_game_3 | Blue   | DCup     |             100 |           0 |      21 |       786 | True     |
 
 This is the head to the cleaned player rows dataset (internally called cleaned_player) that will be used for the predictive model:
+|    | gameid             |   participantid | position   |   kills |   deaths |   assists |   totaldamage |   totalcs |   totalgold |
+|---:|:-------------------|----------------:|:-----------|--------:|---------:|----------:|--------------:|----------:|------------:|
+|  0 | 10660-10660_game_1 |               1 | top        |       1 |        3 |         1 |          7092 |       279 |       11083 |
+|  1 | 10660-10660_game_1 |               2 | jng        |       0 |        4 |         3 |          7361 |       153 |        8636 |
+|  2 | 10660-10660_game_1 |               3 | mid        |       0 |        2 |         0 |         10005 |       270 |       10743 |
+|  3 | 10660-10660_game_1 |               4 | bot        |       2 |        4 |         0 |         10892 |       311 |       12224 |
+|  4 | 10660-10660_game_1 |               5 | sup        |       0 |        3 |         3 |          6451 |        30 |        7221 |
+
+### Univariate Analysis
+
 ## Assessment of Missingness
 ## Hypothesis Testing
 ## Framing a Prediction Problem
