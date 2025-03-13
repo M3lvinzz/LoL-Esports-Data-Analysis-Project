@@ -5,6 +5,10 @@ table {
     white-space: nowrap;
     max-width: 100%;
 }
+table th, table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
 </style>
 
 # League of Legends: Analyzing Void Grubs
@@ -71,9 +75,9 @@ To fully understand the dataset, we must look at the distributions of metrics in
 
 <iframe
 src= 'assets/univariate1.html'
-width = 800
-height = '600'
-frameborder = '0'
+width = 600
+height = 400
+frameborder = 0
 ></iframe>
 
 Looking at the graph, it shows that most games have teams take either 0, 3, or 6 grubs respectively.
@@ -82,8 +86,8 @@ Additionally, gauging how the distribution looks for `totalcs` since it is an in
 
 <iframe
 src= 'assets/univariate2.html'
-width = 800
-height = '600'
+width = 600
+height = '400'
 frameborder = '0'
 ></iframe>
 
@@ -94,8 +98,8 @@ Since match wins are an important metric when preforming analysis on League of L
 
 <iframe
 src= 'assets/bivariate.html'
-width = 800
-height = '600'
+width = 600
+height = '400'
 frameborder = '0'
 ></iframe>
 
