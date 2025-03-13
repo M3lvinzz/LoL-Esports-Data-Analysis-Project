@@ -2,12 +2,16 @@
 table {
     display: block;
     overflow-x: auto;
-    white-space: nowrap;
-    max-width: 110%;
+    max-width: 105%;
 }
-table th, table td {
+td, th {
+    white-space: nowrap;
     padding: 8px;
     border: 1px solid #ddd;
+}
+th {
+    border: 2px solid #333;
+    background-color: #f4f4f4;
 }
 </style>
 
