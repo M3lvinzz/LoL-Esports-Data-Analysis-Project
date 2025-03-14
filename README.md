@@ -236,6 +236,7 @@ When calling the Classification Report, these statistics were listed:
 | **Accuracy** |        |        | **0.85** | 3920    |
 | **Macro Avg** | 0.85  | 0.85   | 0.85     | 3920    |
 | **Weighted Avg** | 0.85 | 0.85 | 0.85     | 3920    |
+
 *Note that False = Game Lost, True = Game Won
 
 This classification report shows that recall and precision are relatively equally balanced and show no distinct outliers. Additionally, the advent of having an 85% accurate test shows that this model, at the very least, preforms admirably without any fine tuning. However, while this model preforms well, in the next section some adjustments will be made to further improve this model's accuracy.
@@ -280,7 +281,12 @@ This classification report shows marginal improvement from both Precision and Re
 
 Displayed is the Confusion Matrix for the improved model:
 
-![confusion_graph]('/assets/confusion_fig.png')
+<iframe
+src= 'assets/confusion_fig.png'
+width = 700
+height = '450'
+frameborder = '0'
+></iframe>
 
 Looking at the Confusion Matrix, it can be seen that not a lot of false positives or false negatives were seen when predicting the model. This shows a visualization of the model's accuracy, and therefore the predicting power of the improved model.
 
