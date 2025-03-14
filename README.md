@@ -121,7 +121,13 @@ To achieve this aggregate dataframe, the cleaned_team_filled dataset was slimmed
 
 ## Assessment of Missingness
 ### NMAR Analysis 
-In the dataset, there are many columns that are missing. For example, some of the missing columns are ones that contain metrics at 25 minutes: `goldat25`, `xpat25`, `csat25`, `opp_goldat25`, `opp_xpat25`, `opp_csat25`, `golddiffat25`, `xpdiffat25`, `csdiffat25`, `killsat25`, `assistsat25`, `deathsat25`, `opp_killsat25`, `opp_assistsat25`, `opp_deathsat25` These are NMAR because if the results are missing, the most likely result is that the game didn't last for that long. This makes the missingness of the 25 second metrics dependent on the length of the game, `gamelength`.
+In the dataset, there are many columns that have missing values. One column that is Not Missing at Random (NMAR) is `url`. This is because of the requirements for a column to be NMAR:
+1. Not dependent on other columns
+2. Can determine why a value is missing based on other values in the column/itself
+
+The column `url` at a first glance is not dependent on any other columns, as the url for any game could be missing. For example, if a certain game was more under the radar, or the league itself didn't have a stats page for that game, then it could be missing. Additionally, we can determine missingness of the column by assuming that if the url is missing, it is because the league or viewers didn't make a page for this particular match.
+
+A column that could help make this Missing at Random instead of Not Missing at Random is documenting where the data came from. For example, if the owner got the data from [Leaguepedia](https://lol.fandom.com/wiki/League_of_Legends_Esports_Wiki), then it would show where data is gotten. If they got the data from watching the [Twitch](https://www.twitch.tv/) stream, then it would list that. This way the missingness of `url` could be determined by where the data came from.
 
 ### Missingness Dependency
 
@@ -180,11 +186,26 @@ For this hypothesis test, Absolute Mean Difference (AMD) is more useful than TVD
 When deciding how to split up `voidgrubs` into two groups to allow for permutation testing, I decided to split it as:
 - 0 - 3 void grubs
 - 4 - 6 void grubs 
+
 This is because since there are about three usual outcomes: getting 0 grubs, 3 grubs and 6 grubs, it's hard to split up the games evenly. I decided that 0 - 3 grubs is a group because it shows that a team either didn't prioritize grubs, or got them to trade for an early dragon. However, having more than 3 grubs shows that a team is prioritizing them and actively gives up other neutral objectives in order to get more grubs.
 
-**Null Hypothesis** - The mean of `totalcs` for teams with more than 3 `voidgrubs` is the same for teams with less than 3 void grubs
+**Null Hypothesis** - The mean of `totalcs` for teams with more than 3 `voidgrubs` is the same for teams with 3 or less void grubs
+
+**Alternate Hypothesis** - The mean of `totalcs` for teams with more than 3 `voidgrubs` is **not** the same for teams with 3 or less void grubs
+
+**Significance Level** - The significance level is the other tests, 0.05 (5%)
+
+<iframe
+src= 'assets/hypothesis_testing.html'
+width = 700
+height = '450'
+frameborder = '0'
+></iframe>
+
+Based on the hypothesis test preformed, a p-value of 0.261 leads the us **Failing to reject the Null Hypothesis** This leads us to assume that getting more void grubs does not lead to getting more `totalcs`. 
 
 ## Framing a Prediction Problem
+
 ## Baseline Model
 ## Final Model
 ## Fairness Analysis
