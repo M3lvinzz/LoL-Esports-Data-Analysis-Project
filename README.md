@@ -125,7 +125,7 @@ In the dataset, there are many columns that are missing. For example, some of th
 
 ### Missingness Dependency
 
-#### `voidgrubs` Missingness Dependency on `kills`
+#### Void Grubs Missingness Dependency on `kills`
 Since `voidgrubs` surprisingly has missing values, finding out the missingness of `voidgrubs` is crucial in figuring out which columns could be used to help impute `voigrubs`. In the above section, [Missing Values](#missing-values), the missingness of `voidgrubs` was imputed with `kills`. In this section, it will show the permutation testing used to determine the dependency on kills.
 
 For this, the test statistic being used is Absolute Mean Difference (AMD) because `kills` is a numerical category, therefore AMD is better than Total Variation Distance (TVD), which is better for categorical distributions.
@@ -145,8 +145,15 @@ frameborder = '0'
 
 From the graph, and after the permutation testing, the observed AMD is a heavy outlier when preforming the permutation testing on missingness of `voidgrubs`. Since the p-value is 0.0, we **reject the null hypothesis**, therefore showing that there is a dependency on `kills` for the missingness of `voidgrubs`.
 
-#### `voidgrubs` Missingness Dependency on `result`
+#### Void Grubs Missingness Dependency on `result`
 However, when looking at the missingness of `voidgrubs` when paired with `result`, we get a different result. For this permutation test, we are using Total Variation Distance (TVD) because `result` is a categorical column, and when going through categorical columns, the more appropriate test statistic is TVD. 
+
+The distribution of `voidgrubs` missingness and `result` can be seen in this table:
+
+| result   |   voidgrubs = False |   voidgrubs = True |
+|:---------|--------------------:|-------------------:|
+| False    |            0.500059 |           0.500359 |
+| True     |            0.499941 |           0.499641 |
 
 **Null Hypothesis** - The distribution of `result` when `voidgrubs` is missing is the same as the distribution of `result` when `voidgrubs` is not missing.
 
@@ -162,7 +169,21 @@ frameborder = '0'
 ></iframe>
 
 Looking at the graph, the observed TVD is very common in terms of the permutated TVDs. Because the p-value is ~0.981, we fail to reject the null hypothesis, showing that there is no dependence of `voidgrubs` missingness on `result`
+
 ## Hypothesis Testing
+In hypothesis testing, the goal is to assess if there is a significant difference in the observed statistic. In this project, we are interested in how `totalcs` is affected by the presence of more grubs. 
+
+For background, in League of Legends, having more Void Grubs generally leads to more towers being taken because of the increased tower damage. This leads to more minion waves being pushed, therefore leading to generally a higher increased `totalcs`. 
+
+For this hypothesis test, Absolute Mean Difference (AMD) is more useful than TVD, because the column `totalcs` is given as a numerical value. This, along with `totalcs` being roughly normally distributed, leads to AMD being more sutible than TVD.
+
+When deciding how to split up `voidgrubs` into two groups to allow for permutation testing, I decided to split it as:
+- 0 - 3 void grubs
+- 4 - 6 void grubs 
+This is because since there are about three usual outcomes: getting 0 grubs, 3 grubs and 6 grubs, it's hard to split up the games evenly. I decided that 0 - 3 grubs is a group because it shows that a team either didn't prioritize grubs, or got them to trade for an early dragon. However, having more than 3 grubs shows that a team is prioritizing them and actively gives up other neutral objectives in order to get more grubs.
+
+**Null Hypothesis** - The mean of `totalcs` for teams with more than 3 `voidgrubs` is the same for teams with less than 3 void grubs
+
 ## Framing a Prediction Problem
 ## Baseline Model
 ## Final Model
