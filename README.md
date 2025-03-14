@@ -3,7 +3,8 @@ table {
     width: 106%;
     border-collapse: collapse;
     text-align: center;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
     overflow-x: auto;
     display: block;
   }
@@ -120,7 +121,35 @@ To achieve this aggregate dataframe, the cleaned_team_filled dataset was slimmed
 
 ## Assessment of Missingness
 ### NMAR Analysis 
+In the dataset, there are many columns that are missing. For example, some of the missing columns are ones that contain metrics at 25 minutes: `goldat25`, `xpat25`, `csat25`, `opp_goldat25`, `opp_xpat25`, `opp_csat25`, `golddiffat25`, `xpdiffat25`, `csdiffat25`, `killsat25`, `assistsat25`, `deathsat25`, `opp_killsat25`, `opp_assistsat25`, `opp_deathsat25` These are NMAR because if the results are missing, the most likely result is that the game didn't last for that long. This makes the missingness of the 25 second metrics dependent on the length of the game, `gamelength`.
 
+### Missingness Dependency
+Since `voidgrubs` surprisingly has missing values, finding out the missingness of `voidgrubs` is crucial in figuring out which columns could be used to help impute `voigrubs`. In the above section, [Missing Values](#missing-values), the missingness of `voidgrubs` was imputed with `kills`. In this section, it will show the permutation testing used to determine the dependency on kills.
+
+For this, the test statistic being used is Absolute Mean Difference (AMD) because `kills` is a numerical category, therefore AMD is better than Total Variation Distance (TVD), which is better for categorical distributions.
+
+**Null Hypothesis** - The Absolute Mean Difference of `kills` when `voidgrubs` is missing is the same as the Absolute Mean Difference of `kills` when voidgrubs` is not missing
+
+**Alternate Hypothesis** - The distribution of `kills` when `voidgrubs` is missing is **Not** the same as the distribution of `kills` when voidgrubs` is not missing
+
+**Significance Level** - The significance level used is 0.05 (5%)
+
+<iframe
+src= 'assets/imputation_kills_missingness.html'
+width = 700
+height = '450'
+frameborder = '0'
+></iframe>
+
+From the graph, and after the permutation testing, the observed AMD is a heavy outlier when preforming the permutation testing on missingness of `voidgrubs`. Since the p-value is 0.0, we **reject the null hypothesis**, therefore showing that there is a dependency on `kills` for the missingness of `voidgrubs`.
+
+However, when looking at the missingness of `voidgrubs` when paired with `result`, we get a different result. For this permutation test, we are using Total Variation Distance (TVD) because `result` is a categorical column, and when going through categorical columns, the more appropriate test statistic is TVD. 
+
+**Null Hypothesis** - The distribution of `result` when `voidgrubs` is missing is the same as the distribution of `result` when `voidgrubs` is not missing.
+
+**Alternate Hypothesis** - The distribution of `result` when `voidgrubs` is missing is the **Not** same as the distribution of `result` when `voidgrubs` is not missing.
+
+**Significance Level** - The significance level used is the same as the last permutation test, 0.05 (5%)
 ## Hypothesis Testing
 ## Framing a Prediction Problem
 ## Baseline Model
