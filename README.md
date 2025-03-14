@@ -69,6 +69,7 @@ This is the head to the cleaned player rows dataset (internally called `cleaned_
 | 10660-10660_game_2 | Blue   | jng        |       0 |        5 |         2 |       181 |        9526 |           3 | False    |
 | 10660-10660_game_2 | Red    | jng        |       1 |        1 |        14 |       190 |       11770 |           6 | True     |
 | 10660-10660_game_3 | Blue   | jng        |       6 |        1 |         7 |       162 |       10791 |           5 | True     |
+
 ### Univariate Analysis
 To fully understand the dataset, we must look at the distributions of metrics in our dataset. Since `voidgrubs` is imperative in our analysis, looking at the distribution of `voidgrubs` is imperative.
 
@@ -215,6 +216,7 @@ This model will be predicting the binary values of if a game was won or not, and
 For the baseline model, the sklearn model used is Random Forest Classifier because for classification models, it is very resistant to overfitting and allows for a more accurate prediction. The features used are: `kills`, `deaths`, `assists`, and `voidgrubs`.
 
 This is what the X features look like in the training set:
+
 |   kills |   deaths |   assists |   voidgrubs |
 |--------:|---------:|----------:|------------:|
 |       5 |        6 |         5 |           0 |
@@ -226,6 +228,7 @@ This is what the X features look like in the training set:
 After splitting the data into training and testing data, a pipeline was made to standardize the X variables since they are quantitative variables, and to make all the statistics look similar. This was achieved by utilizing StandardScaler Transformer to do so. After fitting the model onto the training data, the model gave an Accuracy score of **0.854**, which shows that this baseline model can accurately predict the result of games **~85.4%** of the time. 
 
 When calling the Classification Report, these statistics were listed:
+
 | Class    | Precision | Recall | F1-Score | Support |
 |----------|-----------|--------|----------|---------|
 | False    | 0.86      | 0.85   | 0.86     | 1998    |
