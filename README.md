@@ -36,8 +36,7 @@ While creating 2 datasets, the columns used are described here:
 - `kills` - The 'kills' column contains the number of enemy champions a team/player eliminated from the match.
 - `deaths` - The 'deaths' column records the number of times a team/player was eliminated from the match
 - `assists` - The 'assists' column represents the number of assists a team/player has in a match. An 'assist' is when a player contributes in eliminating an enemy champion, but didn't get the final hit
-- `totalCS` - The 'Creep score' is a metric which contains the number of minions, neutral objectives, and monster camps a team/player took.
-- `totaldamage` - The 'damage' done in this column is only towards enemy champions. This represents the numerical damage a player did towards the opposing players
+- `totalcs` - The 'Creep score' is a metric which contains the number of minions, neutral objectives, and monster camps a team/player took.
 - `totalgold` - 'gold' is a currency in the game given when eliminating champions, turrets, minions/monsters and neutral objectives. This represents the total gold gained by a player
 - `result` - This column contains a binary True of False, which represents if a team won a game or not.
 
@@ -49,7 +48,7 @@ In both datasets, there were a few rows that contained missing values. The playe
 
 One important row that contained a few missing values was the `voidgrubs` column. Since this column is integral to the overall statistical analysis, conditional probabilistic imputation was used to impute the missing `voidgrubs`. By running a permutation test on missingness, it was shown that the missingness of `voidgrubs` is dependent on the kills column. While the essence of the permutation is crucial to understanding, the intricices of the hypothesis test is expanded on in [Assessment of Missingness](#assessment-of-missingness)
 
-This is the head to the cleaned, imputed team rows dataset (internally called cleaned_team_filled) that is used for hypothesis testing:
+This is the head to the cleaned, imputed team rows dataset (internally called `cleaned_team_filled`) that is used for hypothesis testing:
 
 | gameid             | side   | league   |   participantid |   voidgrubs |   kills |   totalcs | result   |
 |:-------------------|:-------|:---------|----------------:|------------:|--------:|----------:|:---------|
@@ -59,16 +58,17 @@ This is the head to the cleaned, imputed team rows dataset (internally called cl
 | 10660-10660_game_2 | Red    | DCup     |             200 |           2 |      17 |      1114 | True     |
 | 10660-10660_game_3 | Blue   | DCup     |             100 |           0 |      21 |       786 | True     |
 
-This is the head to the cleaned player rows dataset (internally called cleaned_player) that will be used for the predictive model:
+When looking at the predictive model dataset, we are looking at the player rows instead of the team rows. However, since the `voidgrubs` column was imputed in `cleaned_team_filled`, the imputed `voidgrubs` in `cleaned_team_filled` must be merged with the player rows to get the void grubs taken for each jungler in each game.
 
-| gameid             |   participantid | position   |   kills |   deaths |   assists |   totaldamage |   totalcs |   totalgold |
-|:-------------------|----------------:|:-----------|--------:|---------:|----------:|--------------:|----------:|------------:|
-| 10660-10660_game_1 |               1 | top        |       1 |        3 |         1 |          7092 |       279 |       11083 |
-| 10660-10660_game_1 |               2 | jng        |       0 |        4 |         3 |          7361 |       153 |        8636 |
-| 10660-10660_game_1 |               3 | mid        |       0 |        2 |         0 |         10005 |       270 |       10743 |
-| 10660-10660_game_1 |               4 | bot        |       2 |        4 |         0 |         10892 |       311 |       12224 |
-| 10660-10660_game_1 |               5 | sup        |       0 |        3 |         3 |          6451 |        30 |        7221 |
+This is the head to the cleaned player rows dataset (internally called `cleaned_jungle`) that will be used for the predictive model:
 
+| gameid             | side   | position   |   kills |   deaths |   assists |   totalcs |   totalgold |   voidgrubs | result   |
+|:-------------------|:-------|:-----------|--------:|---------:|----------:|----------:|------------:|------------:|:---------|
+| 10660-10660_game_1 | Blue   | jng        |       0 |        4 |         3 |       153 |        8636 |           4 | False    |
+| 10660-10660_game_1 | Red    | jng        |       1 |        0 |        12 |       169 |       10590 |           5 | True     |
+| 10660-10660_game_2 | Blue   | jng        |       0 |        5 |         2 |       181 |        9526 |           3 | False    |
+| 10660-10660_game_2 | Red    | jng        |       1 |        1 |        14 |       190 |       11770 |           6 | True     |
+| 10660-10660_game_3 | Blue   | jng        |       6 |        1 |         7 |       162 |       10791 |           5 | True     |
 ### Univariate Analysis
 To fully understand the dataset, we must look at the distributions of metrics in our dataset. Since `voidgrubs` is imperative in our analysis, looking at the distribution of `voidgrubs` is imperative.
 
@@ -202,10 +202,103 @@ height = '450'
 frameborder = '0'
 ></iframe>
 
-Based on the hypothesis test preformed, a p-value of 0.261 leads the us **Failing to reject the Null Hypothesis** This leads us to assume that getting more void grubs does not lead to getting more `totalcs`. 
+Based on the hypothesis test preformed, a p-value of 0.108 leads the us **Failing to reject the Null Hypothesis**. This leads us to assume that getting more void grubs does not lead to getting more `totalcs`. This is because the difference observed is not statistically significant, so the distributions roughly look the same.
 
 ## Framing a Prediction Problem
+Following the theme of analyzing the impact of Void Grubs, creating a predictive model based on Void Grubs becomes intriguing. Since the jungler for each team is usually responsible in gathering all the neutral objectives for each team, we should analyze the metrics from the jungler along with the number of Void Grubs to predict a game being won or lost. 
+
+To be more precise, the predictive model in this project will be designed around the question: **Can we predict the result of the game based on the team's jungler statistics?**
+
+This model will be predicting the binary values of if a game was won or not, and because of this, the model is considered a `Binary Classification Model`. The metric used to evaluate the model will be Accuracy, because since the amounts of wins and losses would be the same, which makes an even split between winning and losing. This makes accuracy better than F-1 because winning and losing are evenly distributed and F-1 works better if `results` were not evenly distributed. At the time of prediction, the data that would be known is: `kills`, `deaths`, `assists`, and `voidgrubs`. To prevent overfitting, the data in cleaned_jungle will be split into 80% training data and 20% testing data. Examples of what the data looks like will be provided in their respective sections.
 
 ## Baseline Model
+For the baseline model, the sklearn model used is Random Forest Classifier because for classification models, it is very resistant to overfitting and allows for a more accurate prediction. The features used are: `kills`, `deaths`, `assists`, and `voidgrubs`.
+
+This is what the X features look like in the training set:
+|   kills |   deaths |   assists |   voidgrubs |
+|--------:|---------:|----------:|------------:|
+|       5 |        6 |         5 |           0 |
+|       3 |        4 |         7 |           6 |
+|       3 |        2 |         2 |           0 |
+|       1 |        1 |        10 |           1 |
+|       5 |        1 |        14 |           0 |
+
+After splitting the data into training and testing data, a pipeline was made to standardize the X variables since they are quantitative variables, and to make all the statistics look similar. This was achieved by utilizing StandardScaler Transformer to do so. After fitting the model onto the training data, the model gave an Accuracy score of **0.854**, which shows that this baseline model can accurately predict the result of games **~85.4%** of the time. 
+
+When calling the Classification Report, these statistics were listed:
+| Class    | Precision | Recall | F1-Score | Support |
+|----------|-----------|--------|----------|---------|
+| False    | 0.86      | 0.85   | 0.86     | 1998    |
+| True     | 0.85      | 0.85   | 0.85     | 1922    |
+| **Accuracy** |        |        | **0.85** | 3920    |
+| **Macro Avg** | 0.85  | 0.85   | 0.85     | 3920    |
+| **Weighted Avg** | 0.85 | 0.85 | 0.85     | 3920    |
+*Note that False = Game Lost, True = Game Won
+
+This classification report shows that recall and precision are relatively equally balanced and show no distinct outliers. Additionally, the advent of having an 85% accurate test shows that this model, at the very least, preforms admirably without any fine tuning. However, while this model preforms well, in the next section some adjustments will be made to further improve this model's accuracy.
+
 ## Final Model
+
+To improve the model, I added two more features, `totalgold` and `totalcs`. `totalgold` is added because generally, in League of Legends, having more gold leads to more items and a generally stronger player. Having a stronger player means that they would be more likely to win. `totalcs` is added because the amount the jungler is farming dictates a few other metrics in the game, such as experience points (XP), gold gained, and neutral objectives taken. Having a higher Creep Score (CS) generally leads to a stronger player, and therefore a highly likelyhood of winning games. I expect these features to give the predictive model a higher accuracy.
+
+To ensure the same training data used from the [Baseline Model](#baseline-model), the base training and test data was merged with the new columns based on index. This ensures the same data being used for both models, and allows for an accurate assessment between both models. The new columns are also added into the pipeline and standardized using Standard Scaler Transformer since `totalcs` and `totalgold` are quantitative variables.
+
+This is what the X features look like in the improved training set:
+
+|   kills |   deaths |   assists |   voidgrubs |   totalcs |   totalgold |
+|--------:|---------:|----------:|------------:|----------:|------------:|
+|       5 |        6 |         5 |           0 |       148 |        9854 |
+|       3 |        4 |         7 |           6 |       202 |       11539 |
+|       3 |        2 |         2 |           0 |       173 |        9671 |
+|       1 |        1 |        10 |           1 |       262 |       13423 |
+|       5 |        1 |        14 |           0 |       301 |       16289 |
+
+*Notice how the training data in [Baseline Model](#baseline-model) is the same here, just with more columns added.
+
+The final model used is the same Random Forest Classifier used in the [Baseline Model](#baseline-model). However, I added more optimized hyperparameters utilizing GridSearchCV. Inputting hyperparameters, `max_depth`, `min_sample_split`, `n_estimators` and `criterion`. After running GridSearchCV, the optimal hyperparameters are:
+- `max_depth` - 10
+- `min_sample_split` - 10
+- `n_estimators` - 200
+- `criterion` - entropy
+
+After running the improved model, an accuracy of **0.8854** is achieved. This shows that instead of the Baseline Model's accuracy of **~85.4%**, the model can accurately predict the outcome of games **~88.54%** of the time. 
+
+When calling the Classification Report, these statistics were listed:
+
+|               | Precision | Recall | F1-Score | Support |
+|---------------|-----------|--------|----------|---------|
+| **False**     | 0.89      | 0.87   | 0.88     | 1955    |
+| **True**      | 0.88      | 0.90   | 0.89     | 1965    |
+| **Accuracy**  |           |        | 0.89     | 3920    |
+| **Macro avg** | 0.89      | 0.89   | 0.89     | 3920    |
+| **Weighted avg** | 0.89   | 0.89   | 0.89     | 3920    |
+
+This classification report shows marginal improvement from both Precision and Recall. Additionally since all metrics (Precision, Recall, Accuracy) are higher than the Baseline Model, this shows that the improved model is more effective in predicting power.
+
+Displayed is the Confusion Matrix for the improved model:
+
+![confusion_graph]('/assets/confusion_fig.png')
+
+Looking at the Confusion Matrix, it can be seen that not a lot of false positives or false negatives were seen when predicting the model. This shows a visualization of the model's accuracy, and therefore the predicting power of the improved model.
+
 ## Fairness Analysis
+For determining if our model is fair, I split the data into the 2 groups used for [Hypothesis Testing](#hypothesis-testing). For a refresher, the groups are:
+- **X** - 0 - 3 void grubs
+- **Y** 4 - 6 void grubs 
+
+The metric used is, however, different from the one used to determine the predictive power in [Final Model](#final-model). This time, since the groups 0-3 and 4-6 void grubs are different sizes, I will be using the **F-1 Score** to describe the difference between predicted and true values.
+
+**Null Hypothesis** - The final model is fair, as the F-1 Score for players with 0-3 void grubs is the same as players who have 4-6 void grubs
+
+**Alternate Hypothesis** - The final model is not fair, as the F-1 Score for players with 0-3 void grubs is the same as players who have 4-6 void grubs
+
+**Significance Level** - The significance level is the other tests, 0.05 (5%)
+
+<iframe
+src= 'assets/fairness_assessment.html'
+width = 700
+height = '450'
+frameborder = '0'
+></iframe>
+
+After preforming the permutation testing, it is shown that the p_value is 0.0, which is much smaller than the significance value of 0.05. This means the test **Rejected the Null Hypothesis**, unfortunately implying that the model is biased in it's predictions. Specifically, it seems to be biased towards players with 4-6 grubs. 
