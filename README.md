@@ -37,7 +37,7 @@ While creating 2 datasets, the columns used are described here:
 - `deaths` (int64) - The 'deaths' column records the number of times a team/player was eliminated from the match
 - `assists` (int64) - The 'assists' column represents the number of assists a team/player has in a match. An 'assist' is when a player contributes in eliminating an enemy champion, but didn't get the final hit
 - `totalcs` (float64) - The 'Creep score' is a metric which contains the number of minions, neutral objectives, and monster camps a team/player took.
-- `totalgold` - 'gold' is a currency in the game given when eliminating champions, turrets, minions/monsters and neutral objectives. This represents the total gold gained by a player
+- `totalgold` (float64) - 'gold' is a currency in the game given when eliminating champions, turrets, minions/monsters and neutral objectives. This represents the total gold gained by a player
 - `result` (bool) - This column contains a binary True of False, which represents if a team won a game or not.
 
 ## Data Cleaning and Exploratory Data Analysis
@@ -71,7 +71,7 @@ This is the head to the cleaned player rows dataset (internally called `cleaned_
 | 10660-10660_game_3 | Blue   | jng        |       6 |        1 |         7 |       162 |       10791 |           5 | True     |
 
 ### Univariate Analysis
-To fully understand the dataset, we must look at the distributions of metrics in our dataset. Since `voidgrubs` is imperative in our analysis, looking at the distribution of `voidgrubs` is imperative.
+To fully understand the dataset, we must look at the distributions of metrics in our dataset. Since `voidgrubs` is imperative in our analysis, looking at the distribution of `voidgrubs` is important:
 
 <iframe
 src= 'assets/univariate1.html'
@@ -82,7 +82,7 @@ frameborder = 0
 
 Looking at the graph, it shows that most games have teams take either 0, 3, or 6 grubs respectively. This makes it hard to split the data up into equal groups since there are 3 big spikes in data quantity. This data imbalance will be an important aspect in later sections, specifically [Hypothesis Testing](#hypothesis-testing) and [Fairness Modeling](#fairness-analysis)
 
-Additionally, gauging how the distribution looks for `totalcs` since it is an integral part of our hypothesis testing later on
+Additionally, gauging how the distribution looks for `totalcs` since it is an integral part of our hypothesis testing later on:
 
 <iframe
 src= 'assets/univariate2.html'
@@ -130,7 +130,7 @@ In the dataset, there are many columns that have missing values. One set of colu
 
 The columns for bans at a first glance is not dependent on any other columns, there are reasons for why a ban could be missing, mainly being that a player did not ban a champion when it was their turn to do so. For example, if the jungler didn't ban a champion, then their ban would end up as Nan.
 
-A column that could help make this Missing at Random instead of Not Missing at Random is documenting if a player banned a champion or not called `banned_champion`. This way, if a ban ends up as Nan, depending on the value in the `banned_champion` column it can be determined if it's missing because the player didn't ban or the data was not gathered.
+A column that could help make this column be Missing at Random (MAR) instead of Not Missing at Random (NMAR) is documenting if a player banned a champion or not called `banned_champion`. This way, if a ban ends up as Nan, depending on the value in the `banned_champion` column it can be determined if it's missing because the player didn't ban or the data was not gathered.
 
 ### Missingness Dependency
 
@@ -297,6 +297,7 @@ Looking at the Confusion Matrix, it can be seen that not a lot of false positive
 
 ## Fairness Analysis
 
+When deploying the entire 
 For determining if our model is fair, I split the data into the 2 groups used for [Hypothesis Testing](#hypothesis-testing). For a refresher, the groups are:
 
 - **X** - 0 - 3 void grubs
