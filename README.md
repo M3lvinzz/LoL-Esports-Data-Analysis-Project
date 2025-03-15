@@ -290,6 +290,7 @@ src= 'assets/confusion_fig.png'
 width = 800
 height = '500'
 frameborder = '0'
+style = "transform: scale(0.7); transform-origin: top left;"
 ></iframe>
 
 Looking at the Confusion Matrix, it can be seen that not a lot of false positives or false negatives were seen when predicting the model. This shows a visualization of the model's accuracy, and therefore the predicting power of the improved model.
