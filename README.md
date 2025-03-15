@@ -19,7 +19,7 @@ League of Legends is a popular multiplayer online battle arena (MOBA) game devel
 
 In League of Legends, there exists many different neutral objectives players must take in order to create a lead against the enemy team. One of the newest neutral objectives is the Void Grubs, introduced in 2024. To give a brief summary, Void Grubs spawn in two waves as groups of three; one at 6 minutes, and the second wave four minutes after the first group is taken. Each Grub taken provides a team wide buff to tower damage, which can help speed up the progression of the slayers team. While taking Void Grubs provides an immediate boost for the team that took it, taking Void Grubs often have long-term effects on the game, shaping the overall team strategies and opposing team interactions.
 
-The Research Question I want to explore further is **How does securing different amounts of Void Grubs impact a team's overall gameplay performance and win rate in League of Legends?** Looking through the dataset, I want to utilize data analysis to find to what degree of impact Void Grubs has on the overall team performance, in-game metrics and match outcomes. Later on I would use the individual's performances to predict the role (top, jungle, mid, bot, support) the player is.
+The Research Question I want to explore further is **How does securing different amounts of Void Grubs impact a team's overall gameplay performance and win rate in League of Legends?** Looking through the dataset, I want to utilize data analysis to find to what degree of impact Void Grubs has on the overall team performance, in-game metrics and match outcomes. Later on I will use the jungler's performance to predict the outcome of the game.
 
 ### Dataset Introduction
 The dataset being used for this project is a professional dataset developed by [Oracle's Elixir](https://oracleselixir.com/about). This dataset records the professional matches for every single year of esports, but for this project the 2024 Esports data will be used. Oracle's Elixir recorded the intricacies for every single match, such as the kill death ratio (KDA), gold spent, minion kills, objectives, etc. This allows for a very deep look for the overall match dynamics and opens the door for statistical analysis.
@@ -44,7 +44,7 @@ While creating 2 datasets, the columns used are described here:
 One of the quirks in the [Oracle's Elixir](https://oracleselixir.com/about) dataset is how the rows are set up between teams and individual players. Each game has twelve rows, ten rows being for the players, and two being for each team summarizing their overall team metrics. For this project, both the player rows and the team rows are needed, but to keep the dataset clean the dataset was split between the player rows and the team rows. 
 
 ### Missing values
-In both datasets, there were a few rows that contained missing values. The player rows contained no missing values for the relevant columns, however, the team rows contained a few missing values. Looking through the team rows, metrics such as `totalcs` were only present in the player rows. To solve this, the total damage was extracted from each player on every team by utilizing groupby on columns `gameid` and `side`. 
+In both datasets, there were a few rows that contained missing values. The player rows contained no missing values for the relevant columns, however, the team rows contained a few missing values. Looking through the team rows, metrics such as `totalcs` were only present in the player rows. To solve this, the total damage was extracted from each player on every team by utilizing groupby on columns `gameid` and `side`. Originally, the `result` column was a column with binary 1 or 0, describing if a game was won or lost. To clean the column and make it more readable the values were changed to boolean values (True if the game was won and False if the game was lost).
 
 One important row that contained a few missing values was the `voidgrubs` column. Since this column is integral to the overall statistical analysis, conditional probabilistic imputation was used to impute the missing `voidgrubs`. By running a permutation test on missingness, it was shown that the missingness of `voidgrubs` is dependent on the kills column. While the essence of the permutation is crucial to understanding, the intricacies of the hypothesis test is expanded on in [Assessment of Missingness](#assessment-of-missingness)
 
@@ -300,7 +300,7 @@ Looking at the Confusion Matrix, it can be seen that not a lot of false positive
 For determining if our model is fair, I split the data into the 2 groups used for [Hypothesis Testing](#hypothesis-testing). For a refresher, the groups are:
 
 - **X** - 0 - 3 void grubs
-- **Y** 4 - 6 void grubs 
+- **Y** - 4 - 6 void grubs 
 
 The metric used is, however, different from the one used to determine the predictive power in [Final Model](#final-model). This time, since the groups 0-3 and 4-6 void grubs are different sizes, I will be using the **F-1 Score** to describe the difference between predicted and true values.
 
@@ -322,4 +322,4 @@ After preforming the permutation testing, it is shown that the p-value is 0.0, w
 An idea that might fix this bias is using more balanced groups, or adjusting where the split for the 2 groups lie, such as making the groups instead look like:
 
 - **X** - 0 - 2 void grubs
-- **Y** 3 - 6 void grubs 
+- **Y** - 3 - 6 void grubs 
