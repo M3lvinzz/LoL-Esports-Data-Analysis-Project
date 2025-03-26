@@ -1,15 +1,3 @@
-<style>
-table {
-    width: 106%;
-    border-collapse: collapse;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    overflow-x: auto;
-    display: block;
-  }
-</style>
-
 # League of Legends: Analyzing Void Grubs
 Authors: Elvin Chen
 
@@ -17,14 +5,14 @@ Authors: Elvin Chen
 ### General Introduction
 League of Legends is a popular multiplayer online battle arena (MOBA) game developed by Riot Games, where two teams of five players battle to destroy the enemy's Nexus while strategizing with unique champions, abilities, and team compositions. Since its release in 2009, it has grown into one of the most played games worldwide, boasting a massive competitive scene. The League of Legends esports ecosystem includes regional leagues like the LCS, LEC, LCK, and LPL, culminating in the prestigious World Championship, where the best teams from around the globe compete for glory and millions in prize money.
 
-In League of Legends, there exists many different neutral objectives players must take in order to create a lead against the enemy team. One of the newest neutral objectives is the Void Grubs, introduced in 2024. To give a brief summary, Void Grubs spawn in two waves as groups of three; one at 6 minutes, and the second wave four minutes after the first group is taken. Each Grub taken provides a team wide buff to tower damage, which can help speed up the progression of the slayers team. While taking Void Grubs provides an immediate boost for the team that took it, taking Void Grubs often have long-term effects on the game, shaping the overall team strategies and opposing team interactions.
+In League of Legends, there exist many different neutral objectives players must take in order to create a lead against the enemy team. One of the newest neutral objectives is the Void Grubs, introduced in 2024. To give a brief summary, Void Grubs spawn in two waves as groups of three; one at 6 minutes, and the second wave four minutes after the first group is taken. Each Grub taken provides a team-wide buff to tower damage, which can help speed up the progression of the slayers team. While taking Void Grubs provides an immediate boost for the team that took it, taking Void Grubs often has long-term effects on the game, shaping the overall team strategies and opposing team interactions.
 
-The Research Question I want to explore further is **How does securing different amounts of Void Grubs impact a team's overall gameplay performance and win rate in League of Legends?** Looking through the dataset, I want to utilize data analysis to find to what degree of impact Void Grubs has on the overall team performance, in-game metrics and match outcomes. Later on I will use the jungler's performance to predict the outcome of the game.
+The Research Question I want to explore further is **How does securing different amounts of Void Grubs impact a team's overall gameplay performance and win rate in League of Legends?** Looking through the dataset, I want to utilize data analysis to find to what degree of impact Void Grubs has on the overall team performance, in-game metrics and match outcomes. Later on, I will use the jungler's performance to predict the outcome of the game.
 
 ### Dataset Introduction
 The dataset being used for this project is a professional dataset developed by [Oracle's Elixir](https://oracleselixir.com/about). This dataset records the professional matches for every single year of esports, but for this project the 2024 Esports data will be used. Oracle's Elixir recorded the intricacies for every single match, such as the kill death ratio (KDA), gold spent, minion kills, objectives, etc. This allows for a very deep look for the overall match dynamics and opens the door for statistical analysis.
 
-The dataset has an extensive array of columns including gameplay metrics and match outcomes for professional leagues for League of Legends Esports Matches. In total, the raw dataset has around 117576 rows and 161 columns. However, I will be splitting up the dataset to focus on the hypothesis testing and the predictive model.
+The dataset has an extensive array of columns, including gameplay metrics and match outcomes for professional leagues for League of Legends Esports Matches. In total, the raw dataset has around 117576 rows and 161 columns. However, I will be splitting up the dataset to focus on the hypothesis testing and the predictive model.
 
 While creating 2 datasets, the columns used are described here:
 - `gameid` (object) - This column contains a unique id for every match played. This makes distinguishing between different matches easy.
@@ -44,9 +32,9 @@ While creating 2 datasets, the columns used are described here:
 One of the quirks in the [Oracle's Elixir](https://oracleselixir.com/about) dataset is how the rows are set up between teams and individual players. Each game has twelve rows, ten rows being for the players, and two being for each team summarizing their overall team metrics. For this project, both the player rows and the team rows are needed, but to keep the dataset clean the dataset was split between the player rows and the team rows. 
 
 ### Missing values
-In both datasets, there were a few rows that contained missing values. The player rows contained no missing values for the relevant columns, however, the team rows contained a few missing values. Looking through the team rows, metrics such as `totalcs` were only present in the player rows. To solve this, the total damage was extracted from each player on every team by utilizing groupby on columns `gameid` and `side`. Originally, the `result` column was a column with binary 1 or 0, describing if a game was won or lost. To clean the column and make it more readable the values were changed to boolean values (True if the game was won and False if the game was lost).
+In both datasets, there were a few rows that contained missing values. The player rows contained no missing values for the relevant columns, however, the team rows contained a few missing values. Looking through the team rows, metrics such as `totalcs` were only present in the player rows. To solve this, the total damage was extracted from each player on every team by utilizing groupby on columns `gameid` and `side`. Originally, the `result` column was a column with binary 1 or 0, describing if a game was won or lost. To clean the column and make it more readable, the values were changed to boolean values (True if the game was won and False if the game was lost).
 
-One important row that contained a few missing values was the `voidgrubs` column. Since this column is integral to the overall statistical analysis, conditional probabilistic imputation was used to impute the missing `voidgrubs`. By running a permutation test on missingness, it was shown that the missingness of `voidgrubs` is dependent on the kills column. While the essence of the permutation is crucial to understanding, the intricacies of the hypothesis test is expanded on in [Assessment of Missingness](#assessment-of-missingness)
+One important row that contained a few missing values was the `voidgrubs` column. Since this column is integral to the overall statistical analysis, conditional probabilistic imputation was used to impute the missing `voidgrubs`. By running a permutation test on missingness, it was shown that the missingness of `voidgrubs` is dependent on the kills column. While the essence of the permutation is crucial to understanding, the intricacies of the hypothesis test are expanded on in [Assessment of Missingness](#assessment-of-missingness)
 
 This is the head to the cleaned, imputed team rows dataset (internally called `cleaned_team_filled`) that is used for hypothesis testing:
 
@@ -58,7 +46,7 @@ This is the head to the cleaned, imputed team rows dataset (internally called `c
 | 10660-10660_game_2 | Red    | DCup     |             200 |           2 |      17 |      1114 | True     |
 | 10660-10660_game_3 | Blue   | DCup     |             100 |           0 |      21 |       786 | True     |
 
-For the predictive modeling, more information is contained in the [Final Model](#final-model) section. For the purposes in this section, only the player rows that contain 'Junglers' are needed. This is easy to acheieve, as querying for 'jng' in `position` gathers all junglers. Since the `voidgrubs` column was imputed in `cleaned_team_filled`, the imputed `voidgrubs` in `cleaned_team_filled` must be merged with the player rows to get the void grubs taken for each jungler in each game.
+More information is contained in the [Final Model](#final-model) section for predictive modeling. For the purposes of this section, only the player rows that contain 'Junglers' are needed. This is easy to achieve, as querying for 'jng' in `position` gathers all junglers. Since the `voidgrubs` column was imputed in `cleaned_team_filled`, the imputed `voidgrubs` in `cleaned_team_filled` must be merged with the player rows to get the void grubs taken for each jungler in each game.
 
 This is the head to the cleaned player rows dataset (internally called `cleaned_jungle`) that will be used for the predictive model:
 
@@ -80,7 +68,7 @@ height = 450
 frameborder = 0
 ></iframe>
 
-Looking at the graph, it shows that most games have teams take either 0, 3, or 6 grubs respectively. This makes it hard to split the data up into equal groups since there are 3 big spikes in data quantity. This data imbalance will be an important aspect in later sections, specifically [Hypothesis Testing](#hypothesis-testing) and [Fairness Modeling](#fairness-analysis)
+Looking at the graph, it shows that most games have teams take either 0, 3, or 6 grubs, respectively. This makes it hard to split the data up into equal groups since there are 3 big spikes in data quantity. This data imbalance will be an important aspect in later sections, specifically [Hypothesis Testing](#hypothesis-testing) and [Fairness Modeling](#fairness-analysis)
 
 Additionally, gauging how the distribution looks for `totalcs` since it is an integral part of our hypothesis testing later on:
 
@@ -91,10 +79,10 @@ height = '450'
 frameborder = '0'
 ></iframe>
 
-Looking at the distribution of total cs, we see that it is relatively normally distributed, and shows that it is a good statistic for analyzing the impact of `voidgrubs`.
+Looking at the distribution of total cs, we see that it is relatively normally distributed, which is a good statistic for analyzing the impact of `voidgrubs`.
 
 ### Bivariate Analysis
-Since match wins are an important metric when preforming analysis on League of Legends data, looking at the relationship between number of `voidgrubs` and `result` become important in understanding the importance of `voidgrubs`.
+Since match wins are an important metric when preforming analysis on League of Legends data, looking at the relationship between the number of `voidgrubs` and `result` becomes important in understanding the importance of `voidgrubs`.
 
 <iframe
 src= 'assets/bivariate.html'
@@ -103,10 +91,10 @@ height = '450'
 frameborder = '0'
 ></iframe>
 
-According to the plots, it is shown that 'games_won' overtake the 'games_lost' when having 3+ grubs. This shows that there might be a correlation between winning games and having more void grubs, especially having 6 grubs, which have a much higher ratio of 'games_won' compared to 'games_lost'
+According to the plots, it is shown that 'games_won' overtakes the 'games_lost' when having 3+ grubs. This shows that there might be a correlation between winning games and having more void grubs, especially having 6 grubs, which have a much higher ratio of 'games_won' compared to 'games_lost'
 
 ### Interesting Aggregate
-Aggregating the `cleaned_team_filled`, and interesting pattern appears:
+Aggregating the `cleaned_team_filled`, an interesting pattern appears:
 
 |   voidgrubs |   kills |   totalcs |   result |
 |------------:|--------:|----------:|---------:|
@@ -128,14 +116,14 @@ In the dataset, there are many columns that have missing values. One set of colu
 1. Not dependent on other columns
 2. Can determine why a value is missing based on other values in the column/itself
 
-The columns for bans at a first glance is not dependent on any other columns, there are reasons for why a ban could be missing, mainly being that a player did not ban a champion when it was their turn to do so. For example, if the jungler didn't ban a champion, then their ban would end up as Nan.
+The columns for bans, at first glance, are not dependent on any other columns. There are reasons why a ban could be missing, mainly being that a player did not ban a champion when it was their turn to do so. For example, if the jungler didn't ban a champion, then their ban would end up as Nan.
 
-A column that could help make this column be Missing at Random (MAR) instead of Not Missing at Random (NMAR) is documenting if a player banned a champion or not called `banned_champion`. This way, if a ban ends up as Nan, depending on the value in the `banned_champion` column it can be determined if it's missing because the player didn't ban or the data was not gathered.
+A column that could help make this column be Missing at Random (MAR) instead of Not Missing at Random (NMAR) is documenting if a player banned a champion or not called `banned_champion`. This way, if a ban ends up as Nan, depending on the value in the `banned_champion` column, it can be determined if it's missing because the player didn't ban or the data was not gathered.
 
 ### Missingness Dependency
 
 #### Void Grubs Missingness Dependency on `kills`
-Since `voidgrubs` surprisingly has missing values, finding out the missingness of `voidgrubs` is crucial in figuring out which columns could be used to help impute `voigrubs`. In the above section, [Missing Values](#missing-values), the missingness of `voidgrubs` was imputed with `kills`. In this section, it will show the permutation testing used to determine the dependency on kills.
+Since `voidgrubs` surprisingly has missing values, finding out the missingness of `voidgrubs` is crucial in figuring out which columns could be used to help impute `voigrubs`. In the above section, [Missing Values](#missing-values), the missingness of `voidgrubs` was imputed with `kills`. In this section it will show the permutation testing used to determine the dependency on kills.
 
 For this, the test statistic being used is Absolute Mean Difference (AMD) because `kills` is a numerical category, therefore AMD is better than Total Variation Distance (TVD), which is better for categorical distributions.
 
@@ -166,7 +154,7 @@ The distribution of `voidgrubs` missingness and `result` can be seen in this tab
 
 **Null Hypothesis** - The distribution of `result` when `voidgrubs` is missing is the same as the distribution of `result` when `voidgrubs` is not missing.
 
-**Alternate Hypothesis** - The distribution of `result` when `voidgrubs` is missing is the **Not** same as the distribution of `result` when `voidgrubs` is not missing.
+**Alternate Hypothesis** - The distribution of `result` when `voidgrubs` is missing is **Not** the same as the distribution of `result` when `voidgrubs` is not missing.
 
 **Significance Level** - The significance level used is the same as the last permutation test, 0.05 (5%).
 
@@ -190,7 +178,7 @@ When deciding how to split up `voidgrubs` into two groups to allow for permutati
 - 0 - 3 void grubs
 - 4 - 6 void grubs 
 
-This is because since there are about three usual outcomes: getting 0 grubs, 3 grubs and 6 grubs, it's hard to split up the games evenly. I decided that 0 - 3 grubs is a group because it shows that a team either didn't prioritize grubs, or got them to trade for an early dragon. However, having more than 3 grubs shows that a team is prioritizing them and actively gives up other neutral objectives in order to get more grubs.
+This is because there are about three usual outcomes: getting 0 grubs, 3 grubs, and 6 grubs, and it's hard to split up the games evenly. I decided that 0 - 3 grubs is a group because it shows that a team either didn't prioritize grubs, or got them to trade for an early dragon. However, having more than 3 grubs shows that a team is prioritizing them and actively giving up other neutral objectives in order to get more grubs.
 
 **Null Hypothesis** - The mean of `totalcs` for teams with more than 3 `voidgrubs` is the same for teams with 3 or less void grubs
 
@@ -205,17 +193,17 @@ height = '450'
 frameborder = '0'
 ></iframe>
 
-Based on the hypothesis test preformed, a p-value of 0.108 leads the us **failing to reject the null hypothesis**. This leads us to assume that getting more void grubs does not lead to getting more `totalcs`. This is because the difference observed is not statistically significant, so the distributions roughly look the same.
+Based on the hypothesis test performed, a p-value of 0.108 leads us **failing to reject the null hypothesis**. This leads us to assume that getting more void grubs does not lead to getting more `totalcs`. This is because the difference observed is not statistically significant, so the distributions roughly look the same.
 
 ## Framing a Prediction Problem
 Following the theme of analyzing the impact of Void Grubs, creating a predictive model based on Void Grubs becomes intriguing. Since the jungler for each team is usually responsible in gathering all the neutral objectives for each team, we should analyze the metrics from the jungler along with the number of Void Grubs to predict a game being won or lost. 
 
 To be more precise, the predictive model in this project will be designed around the question: **Can we predict the result of the game based on the team's jungler statistics?**
 
-This model will be predicting the binary values of if a game was won or not, and because of this, the model is considered a `Binary Classification Model`. The metric used to evaluate the model will be mainly accuracy, because since the amounts of wins and losses would be the same, which makes an even split between winning and losing. This makes accuracy better than F-1 because winning and losing are evenly distributed and F-1 works better if `results` were not evenly distributed. However, the F-1 Scores will be provided as well, along with other metrics described in a Classification Report. At the time of prediction, the data that would be known is: `kills`, `deaths`, `assists`, and `voidgrubs`. To prevent overfitting, the data in `cleaned_jungle` will be split into 80% training data and 20% testing data. Examples of what the data looks like will be provided in their respective sections.
+This model will be predicting the binary values of whether a game was won or not, and because of this, the model is considered a `Binary Classification Model`. The metric used to evaluate the model will be mainly accuracy because the amounts of wins and losses would be the same, which makes an even split between winning and losing. This makes accuracy better than F-1 because winning and losing are evenly distributed, and F-1 works better if `results` were not evenly distributed. However, the F-1 Scores will be provided as well, along with other metrics described in a Classification Report. At the time of prediction, the data that would be known is: `kills`, `deaths`, `assists`, and `voidgrubs`. To prevent overfitting, the data in `cleaned_jungle` will be split into 80% training data and 20% testing data. Examples of what the data looks like will be provided in their respective sections.
 
 ## Baseline Model
-For the baseline model, the sklearn model used is Random Forest Classifier because for classification models, it is very resistant to overfitting and allows for a more accurate prediction. The features used are: `kills`, `deaths`, `assists`, and `voidgrubs`.
+For the baseline model, the sklearn model used is Random Forest Classifier because for classification models, it is very resistant to overfitting and allows for a more accurate prediction. The features used are `kills`, `deaths`, `assists`, and `voidgrubs`.
 
 This is what the X features look like in the training set:
 
@@ -227,7 +215,7 @@ This is what the X features look like in the training set:
 |       1 |        1 |        10 |           1 |
 |       5 |        1 |        14 |           0 |
 
-After splitting the data into training and testing data, a pipeline was made to standardize the X variables since they are quantitative variables, and to make all the statistics look similar. This was achieved by utilizing StandardScaler Transformer to do so. After fitting the model onto the training data, the model gave an Accuracy score of **0.854**, which shows that this baseline model can accurately predict the result of games **~85.4%** of the time. 
+After splitting the data into training and testing data, a pipeline was made to standardize the X variables since they are quantitative variables and to make all the statistics look similar. This was achieved by utilizing StandardScaler Transformer to do so. After fitting the model onto the training data, the model gave an Accuracy score of **0.854**, which shows that this baseline model can accurately predict the result of games **~85.4%** of the time. 
 
 When calling the Classification Report, these statistics were listed:
 
@@ -241,13 +229,13 @@ When calling the Classification Report, these statistics were listed:
 
 *Note that False = Game Lost, True = Game Won
 
-This classification report shows that recall and precision are relatively equally balanced and show no distinct outliers. Additionally, the advent of having an 85% accurate test shows that this model, at the very least, preforms admirably without any fine tuning. However, while this model preforms well, in the next section some adjustments will be made to further improve this model's accuracy.
+This classification report shows that recall and precision are relatively equally balanced and show no distinct outliers. Additionally, the advent of having an 85% accurate test shows that this model, at the very least, performs admirably without any fine-tuning. However, while this model performs well, in the next section, some adjustments will be made to further improve this model's accuracy.
 
 ## Final Model
 
-To improve the model, I added two more features, `totalgold` and `totalcs`. `totalgold` is added because generally, in League of Legends, having more gold leads to more items and a generally stronger player. Having a stronger player means that they would be more likely to win. `totalcs` is added because the amount the jungler is farming dictates a few other metrics in the game, such as experience points (XP), gold gained, and neutral objectives taken. Having a higher Creep Score (CS) generally leads to a stronger player, and therefore a highly likelyhood of winning games. I expect these features to give the predictive model a higher accuracy.
+To improve the model, I added two more features, `totalgold` and `totalcs`. `totalgold` was added because generally, in League of Legends, having more gold leads to more items and a generally stronger player. Having a stronger player means that they would be more likely to win. `totalcs` is added because the amount the jungler is farming dictates a few other metrics in the game, such as experience points (XP), gold gained, and neutral objectives taken. Having a higher Creep Score (CS) generally leads to a stronger player, and therefore a highly likelihood of winning games. I expect these features to give the predictive model a higher accuracy.
 
-To ensure the same training data used from the [Baseline Model](#baseline-model), the base training and test data was merged with the new columns based on index. This ensures the same data being used for both models, and allows for an accurate assessment between both models. The new columns are also added into the pipeline and standardized using Standard Scaler Transformer since `totalcs` and `totalgold` are quantitative variables.
+To ensure the same training data used from the [Baseline Model](#baseline-model), the base training and test data were merged with the new columns based on the index. This ensures the same data is being used for both models and allows for an accurate assessment between both models. The new columns are also added into the pipeline and standardized using StandardScaler Transformer since `totalcs` and `totalgold` are quantitative variables.
 
 This is what the X features look like in the improved training set:
 
@@ -281,7 +269,7 @@ When calling the Classification Report, these statistics were listed:
 
 *Note that False = Game Lost, True = Game Won
 
-This classification report shows marginal improvement from both Precision and Recall, and F-1 Score. Additionally since all metrics (Precision, Recall, Accuracy) are higher than the Baseline Model, this shows that the improved model is more effective in predicting power.
+This classification report shows marginal improvement from both Precision and Recall, and F-1 Score. Additionally, since all metrics (Precision, Recall, Accuracy) are higher than the Baseline Model, this shows that the improved model is more effective in predicting power.
 
 Displayed is the Confusion Matrix for the improved model:
 
@@ -318,9 +306,22 @@ height = '450'
 frameborder = '0'
 ></iframe>
 
-After preforming the permutation testing, it is shown that the p-value is 0.0, which is much smaller than the significance value of 0.05. This means the test **rejected the null hypothesis**, unfortunately implying that the model is biased in it's predictions. Specifically, it seems to be biased towards players with 4-6 grubs. 
+After performing the permutation testing, it is shown that the p-value is 0.0, which is much smaller than the significance value of 0.05. This means the test **rejected the null hypothesis**, unfortunately implying that the model is biased in it's predictions. Specifically, it seems to be biased towards players with 4-6 grubs. 
 
-An idea that might fix this bias is using more balanced groups, or adjusting where the split for the 2 groups lie, such as making the groups instead look like:
+An idea that might fix this bias is using more balanced groups or adjusting where the split for the 2 groups lie, such as making the groups instead look like:
 
 - **X** - 0 - 2 void grubs
 - **Y** - 3 - 6 void grubs 
+
+
+<style>
+table {
+    width: 106%;
+    border-collapse: collapse;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-x: auto;
+    display: block;
+  }
+</style>
